@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dash Board Cruse</title>
+<style>
+  *{box-sizing:border-box}
+  html,body{margin:0;height:100%;font-family:Roboto,Arial,sans-serif;color:#263238;background:#fff}
+  body{overflow:hidden}
+  .app{height:100vh;display:flex;flex-direction:column}
+  .topbar{height:79px;background:#f8fafd;border-top:9px solid #3c4043;display:flex;align-items:center;padding:0 16px;box-shadow:0 1px 0 #dfe3e8;flex-shrink:0}
+  .brand-icon{width:30px;height:30px;margin-right:14px;position:relative}
+  .brand-icon:before,.brand-icon:after{content:"";position:absolute;border:3px solid #8aa0b8;border-radius:50%;width:9px;height:9px}
+  .brand-icon:before{left:1px;top:13px}
+  .brand-icon:after{right:1px;top:1px}
+  .brand-icon span{position:absolute;width:18px;height:3px;background:#5f7da0;transform:rotate(-55deg);left:6px;top:13px}
+  .brand{font-size:20px;color:#26384a;letter-spacing:.1px}
+  .top-actions{margin-left:auto;display:flex;align-items:center;gap:16px}
+  .action{height:43px;border:1px solid #dadce0;background:#fff;border-radius:24px;padding:0 18px;color:#1a73e8;font-size:14px;display:flex;align-items:center;gap:9px}
+  .action.share{background:#c2e3fb;border-color:#c2e3fb;color:#174ea6}
+  .circle{width:45px;height:45px;border:1px solid #9aa0a6;border-radius:50%;background:#fff;display:grid;place-items:center;font-size:22px;color:#3c4043}
+  .avatar{width:42px;height:42px;border-radius:50%;background:#a8c7fa;display:grid;place-items:center;color:#4775cf;font-size:23px}
+  .main{display:flex;min-height:0;flex:1}
+  .sidebar{width:276px;background:#fff;border-right:1px solid #dadce0;flex-shrink:0;padding-top:36px;overflow:hidden}
+  .section-title{font-weight:600;color:#174ea6;font-size:16px;padding:0 14px 14px;display:flex;align-items:center;gap:5px}
+  .chev{font-size:13px;color:#5f6368}
+  .nav{display:flex;flex-direction:column;gap:2px}
+  .nav-item{height:53px;padding:0 38px;display:flex;align-items:center;color:#5f6368;font-size:15px;cursor:pointer}
+  .nav-item:hover{background:#f1f3f4}
+  .nav-item.active{background:#e8f0fe;color:#174ea6;font-weight:600;border-radius:0 28px 28px 0}
+  .group{margin-top:17px;padding:0 14px;font-weight:600;color:#5f6368}
+  .content{flex:1;min-width:0;background:#fff;overflow:auto}
+  .workspace{padding:34px 13px 60px}
+  .control-row{display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+  .pill{height:42px;border:1px solid #dadce0;border-radius:22px;background:#fff;display:flex;align-items:center;justify-content:space-between;padding:0 22px;font-size:14px;color:#202124;box-shadow:0 1px 2px rgba(60,64,67,.08);min-width:165px}
+  .pill.date{width:322px;font-size:16px}
+  .pill.tasks{width:322px;font-size:15px}
+  .pill .arrow{font-size:13px;margin-left:15px;color:#3c4043}
+  .hero{margin-top:-5px;background:#2374df;color:#fff;height:81px;border-radius:9px;display:flex;align-items:center;overflow:hidden}
+  .hero-title{font-size:38px;font-weight:700;padding:0 18px;flex:1;white-space:nowrap}
+  .hero-title span{font-weight:400}
+  .hero-box{height:100%;display:flex;align-items:center;padding:0 18px;border-left:6px solid #fff;font-size:18px;font-weight:600}
+  .hero-updated{min-width:270px;height:100%;display:flex;flex-direction:column;justify-content:center;padding:0 20px;border-left:6px solid #fff}
+  .hero-updated small{font-size:11px}
+  .hero-updated strong{font-size:17px}
+  .hero-updated em{font-size:12px;font-style:normal;text-align:right;margin-top:2px}
+  .filters{margin-top:15px;display:grid;grid-template-columns:repeat(6,minmax(145px,1fr));gap:10px}
+  .filter{height:40px;border:1px solid #bfc5cc;border-radius:22px;background:#fff;padding:0 16px 0 26px;display:flex;align-items:center;justify-content:space-between;font-size:13px;min-width:0}
+  .filter .value{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;margin-right:10px}
+  .filter .down{font-size:11px;color:#3c4043}
+  .filter.wide{grid-column:span 2}
+  .filter.queue{grid-column:span 2}
+  .notice-line{height:3px;background:#1a73e8;margin-top:10px}
+  .note{margin:42px 5px 20px;background:#ffd2c5;border:1px solid #ff5b2a;border-radius:13px;padding:10px 13px;color:#f04a1c;font-size:16px;max-width:1010px;line-height:1.3}
+  .note b{text-decoration:underline}
+  .card{border:1px solid #edf0f2;border-radius:13px;box-shadow:0 1px 3px rgba(60,64,67,.10);padding:10px 16px 0;overflow:hidden}
+  .card-title{font-size:19px;font-weight:700;margin:2px 0 27px 36px}
+  .card-title span{font-weight:400;color:#777}
+  .table-wrap{overflow:auto;border-top:0}
+  table{border-collapse:separate;border-spacing:0;width:100%;min-width:1150px;font-size:13px}
+  th{font-weight:400;text-align:left;height:38px;color:#4f555b;white-space:nowrap;padding:0 8px}
+  th:first-child{padding-left:36px}
+  td{height:40px;padding:0 8px;border-top:1px solid #f1f3f4;white-space:nowrap;color:#4f555b}
+  td:first-child{padding-left:36px}
+  tr:nth-child(even) td{background:#fbfbfb}
+  .url{color:#5f6368;text-decoration:underline;max-width:230px;overflow:hidden;text-overflow:ellipsis;display:inline-block;vertical-align:middle}
+  .dash{color:#666}
+  .status{color:#3c4043}
+  .footer-space{height:20px}
+  .menu{position:fixed;z-index:20;background:#fff;border:1px solid #dadce0;border-radius:10px;box-shadow:0 4px 14px rgba(0,0,0,.16);padding:6px 0;display:none;min-width:190px}
+  .menu.open{display:block}
+  .menu-item{padding:9px 14px;font-size:13px;cursor:pointer}
+  .menu-item:hover{background:#f1f3f4}
+  @media(max-width:1200px){
+    .sidebar{width:220px}.hero-title{font-size:30px}.filters{grid-template-columns:repeat(4,minmax(140px,1fr))}
+    .filter.wide,.filter.queue{grid-column:span 2}
+  }
+  @media(max-width:800px){
+    body{overflow:auto}.topbar{height:64px}.sidebar{display:none}.workspace{padding:18px 10px}
+    .hero{height:auto;min-height:100px;flex-wrap:wrap}.hero-title{font-size:26px;padding:15px}.hero-box{height:48px}.hero-updated{height:48px}
+    .filters{grid-template-columns:repeat(2,minmax(140px,1fr))}.filter.wide,.filter.queue{grid-column:span 2}
+    .top-actions .action{display:none}.brand{font-size:17px}
+  }
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="topbar">
+    <div class="brand-icon"><span></span></div>
+    <div class="brand">Dash Board Cruse</div>
+    <div class="top-actions">
+      <button class="action" onclick="resetFilters()">↶ &nbsp;Reset</button>
+      <button class="action share">♙ &nbsp;Share <span>▼</span></button>
+      <button class="circle">⋮</button>
+      <div class="avatar">●</div>
+    </div>
+  </header>
+
+  <div class="main">
+    <aside class="sidebar">
+      <div class="section-title"><span class="chev">▾</span> Production</div>
+      <nav class="nav">
+        <div class="nav-item">Active Time On Tool</div>
+        <div class="nav-item">Time Per Label</div>
+        <div class="nav-item">Campaign Throughput</div>
+        <div class="nav-item">Labeler Performance</div>
+        <div class="nav-item active">Daily Task Tracking</div>
+      </nav>
+      <div class="group"><span class="chev">▸</span> Efficiency</div>
+    </aside>
+
+    <main class="content">
+      <div class="workspace">
+        <div class="control-row">
+          <button class="pill date" data-filter="date" onclick="openMenu(this)">Sep 28, 2026 - Sep 28, 2026 <span class="arrow">▼</span></button>
+          <button class="pill tasks" data-filter="segment" onclick="openMenu(this)">Tasks Or Segments: segments <span class="arrow">▼</span></button>
+
+          <div class="hero">
+            <div class="hero-title">Labeling Production: <span>Daily Task Tracking</span></div>
+            <div class="hero-box">Feedback</div>
+            <div class="hero-updated">
+              <small>Last Updated:</small>
+              <strong>Sep 28, 2026, 12:00 AM</strong>
+              <em>me936584@meti.ai</em>
+            </div>
+          </div>
+        </div>
+
+        <div class="filters">
+          <button class="filter" data-key="created" onclick="openMenu(this)"><span class="value">Created Date</span><span class="down">▼</span></button>
+          <button class="filter" data-key="updated" onclick="openMenu(this)"><span class="value">Updated_at Date</span><span class="down">▼</span></button>
+          <button class="filter" data-key="submitted" onclick="openMenu(this)"><span class="value">Submitted Date</span><span class="down">▼</span></button>
+          <button class="filter" data-key="processed" onclick="openMenu(this)"><span class="value">Processed Date</span><span class="down">▼</span></button>
+          <button class="filter" data-key="cancelled" onclick="openMenu(this)"><span class="value">Tree Is Cancelled</span><span class="down">▼</span></button>
+          <button class="filter" data-key="tag" onclick="openMenu(this)"><span class="value">Tag</span><span class="down">▼</span></button>
+
+          <button class="filter" data-key="status" onclick="openMenu(this)"><span class="value">Task Status: processed (1)</span><span class="down">▼</span></button>
+          <button class="filter" data-key="type" onclick="openMenu(this)"><span class="value">Task Type</span><span class="down">▼</span></button>
+          <button class="filter" data-key="user" onclick="openMenu(this)"><span class="value">Latest User</span><span class="down">▼</span></button>
+          <button class="filter queue" data-key="queue" onclick="openMenu(this)"><span class="value">MSL Queue</span><span class="down">▼</span></button>
+        </div>
+
+        <div class="notice-line"></div>
+
+        <div class="note">
+          <b>NOTE:</b> Use the <b>Tasks Or Segments</b> filter to show the count of distinct segments -or- count of distinct tasks. Please use the <b>TASK count</b> for <b>Image Segmentation</b> due to these segments being split into multiple tasks.
+        </div>
+
+        <section class="card">
+          <div class="card-title">Task Tracking by Status <span>(Counting Segments)</span></div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>⊟&nbsp; task_status</th>
+                  <th>⊟&nbsp; URL</th>
+                  <th>Latest User</th>
+                  <th>MslBenchmarkLab...</th>
+                  <th>SellClumping</th>
+                  <th>SellIvandar2D</th>
+                  <th>SellIvandarQA</th>
+                  <th>SellMapping</th>
+                  <th>SellMappingQA</th>
+                  <th>SellRelabeling</th>
+                </tr>
+              </thead>
+              <tbody id="rows">
+                <tr><td class="status">processed</td><td><span class="url">https://labeling.robot.car/#/task/...</span></td><td>me131049@meti.ai</td><td class="dash">-</td><td class="dash">-</td><td class="dash">-</td><td class="dash">-</td><td class="dash">-</td><td class="dash">-</td><td class="dash">-</td></tr>
+                <tr><td class="status">processed</td><td><span class="url">https://labeling.robot.car/#/task/...</span></td><td>me450596@meti.ai</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td></tr>
+                <tr><td class="status">processed</td><td><span class="url">https://labeling.robot.car/#/task/...</span></td><td>me450596@meti.ai</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td></tr>
+                <tr><td class="status">processed</td><td><span class="url">https://labeling.robot.car/#/task/...</span></td><td>me450596@meti.ai</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td></tr>
+                <tr><td class="status">processed</td><td><span class="url">https://labeling.robot.car/#/task/...</span></td><td>me450596@meti.ai</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td></tr>
+                <tr><td class="status">processed</td><td><span class="url">https://labeling.robot.car/#/task/...</span></td><td>me320817@meti.ai</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td></tr>
+                <tr><td class="status">processed</td><td><span class="url">https://labeling.robot.car/#/task/...</span></td><td>me213848@meti.ai</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td></tr>
+                <tr><td class="status">processed</td><td><span class="url">https://labeling.robot.car/#/task/...</span></td><td>me127964@meti.ai</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="footer-space"></div>
+        </section>
+      </div>
+    </main>
+  </div>
+</div>
+
+<div id="menu" class="menu"></div>
+
+<script>
+const options = {
+  date:["Sep 28, 2026 - Sep 28, 2026","Sep 27, 2026 - Sep 28, 2026","Last 7 days"],
+  segment:["Tasks Or Segments: segments","Tasks Or Segments: tasks"],
+  created:["Created Date","Today","Yesterday","All time"],
+  updated:["Updated_at Date","Today","Yesterday","All time"],
+  submitted:["Submitted Date","Today","Yesterday","All time"],
+  processed:["Processed Date","Today","Yesterday","All time"],
+  cancelled:["Tree Is Cancelled","All","true","false"],
+  tag:["Tag","QUEUE","METRIC"],
+  status:["Task Status: processed (1)","Task Status: created","Task Status: skipped","All statuses"],
+  type:["Task Type","SellClumping","SellIvandar2D","SellIvandarQA","SellMapping","SellRelabeling"],
+  user:["Latest User","me131049@meti.ai","me450596@meti.ai","me320817@meti.ai","me213848@meti.ai","me127964@meti.ai"],
+  queue:["MSL Queue","All queues","MSL Queue"]
+};
+
+let activeButton=null;
+function openMenu(btn){
+  activeButton=btn;
+  const menu=document.getElementById('menu');
+  const key=btn.dataset.filter || btn.dataset.key;
+  const list=options[key] || ["All","Default"];
+  menu.innerHTML=list.map(v=>`<div class="menu-item" onclick="selectOption(${JSON.stringify(v)})">${v}</div>`).join("");
+  const r=btn.getBoundingClientRect();
+  menu.style.left=Math.min(r.left,window.innerWidth-220)+"px";
+  menu.style.top=(r.bottom+6)+"px";
+  menu.classList.add("open");
+}
+function selectOption(value){
+  if(!activeButton)return;
+  const valueEl=activeButton.querySelector(".value");
+  if(valueEl) valueEl.textContent=value;
+  else activeButton.innerHTML=escapeHtml(value)+" <span class='arrow'>▼</span>";
+  document.getElementById('menu').classList.remove('open');
+}
+function escapeHtml(s){return s.replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]));}
+function resetFilters(){
+  document.querySelectorAll('.filter').forEach(el=>{
+    const value=el.querySelector('.value');
+    if(!value)return;
+    const defaults={
+      created:"Created Date",updated:"Updated_at Date",submitted:"Submitted Date",
+      processed:"Processed Date",cancelled:"Tree Is Cancelled",tag:"Tag",
+      status:"Task Status: processed (1)",type:"Task Type",user:"Latest User",queue:"MSL Queue"
+    };
+    value.textContent=defaults[el.dataset.key] || value.textContent;
+  });
+  document.querySelector('[data-filter="date"]').innerHTML='Sep 28, 2026 - Sep 28, 2026 <span class="arrow">▼</span>';
+  document.querySelector('[data-filter="segment"]').innerHTML='Tasks Or Segments: segments <span class="arrow">▼</span>';
+}
+document.addEventListener('click',e=>{
+  if(!e.target.closest('.menu') && !e.target.closest('.filter') && !e.target.closest('.pill'))
+    document.getElementById('menu').classList.remove('open');
+});
+</script>
+</body>
+</html>
