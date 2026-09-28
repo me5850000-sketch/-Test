@@ -1,245 +1,82 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Dash Board Cruse</title>
 <style>
-  *{box-sizing:border-box}
-  html,body{margin:0;height:100%;font-family:Roboto,Arial,sans-serif;color:#263238;background:#fff}
-  body{overflow:hidden}
-  .app{height:100vh;display:flex;flex-direction:column}
-  .topbar{height:79px;background:#f8fafd;border-top:9px solid #3c4043;display:flex;align-items:center;padding:0 16px;box-shadow:0 1px 0 #dfe3e8;flex-shrink:0}
-  .brand-icon{width:30px;height:30px;margin-right:14px;position:relative}
-  .brand-icon:before,.brand-icon:after{content:"";position:absolute;border:3px solid #8aa0b8;border-radius:50%;width:9px;height:9px}
-  .brand-icon:before{left:1px;top:13px}
-  .brand-icon:after{right:1px;top:1px}
-  .brand-icon span{position:absolute;width:18px;height:3px;background:#5f7da0;transform:rotate(-55deg);left:6px;top:13px}
-  .brand{font-size:20px;color:#26384a;letter-spacing:.1px}
-  .top-actions{margin-left:auto;display:flex;align-items:center;gap:16px}
-  .action{height:43px;border:1px solid #dadce0;background:#fff;border-radius:24px;padding:0 18px;color:#1a73e8;font-size:14px;display:flex;align-items:center;gap:9px}
-  .action.share{background:#c2e3fb;border-color:#c2e3fb;color:#174ea6}
-  .circle{width:45px;height:45px;border:1px solid #9aa0a6;border-radius:50%;background:#fff;display:grid;place-items:center;font-size:22px;color:#3c4043}
-  .avatar{width:42px;height:42px;border-radius:50%;background:#a8c7fa;display:grid;place-items:center;color:#4775cf;font-size:23px}
-  .main{display:flex;min-height:0;flex:1}
-  .sidebar{width:276px;background:#fff;border-right:1px solid #dadce0;flex-shrink:0;padding-top:36px;overflow:hidden}
-  .section-title{font-weight:600;color:#174ea6;font-size:16px;padding:0 14px 14px;display:flex;align-items:center;gap:5px}
-  .chev{font-size:13px;color:#5f6368}
-  .nav{display:flex;flex-direction:column;gap:2px}
-  .nav-item{height:53px;padding:0 38px;display:flex;align-items:center;color:#5f6368;font-size:15px;cursor:pointer}
-  .nav-item:hover{background:#f1f3f4}
-  .nav-item.active{background:#e8f0fe;color:#174ea6;font-weight:600;border-radius:0 28px 28px 0}
-  .group{margin-top:17px;padding:0 14px;font-weight:600;color:#5f6368}
-  .content{flex:1;min-width:0;background:#fff;overflow:auto}
-  .workspace{padding:34px 13px 60px}
-  .control-row{display:flex;gap:14px;align-items:center;flex-wrap:wrap}
-  .pill{height:42px;border:1px solid #dadce0;border-radius:22px;background:#fff;display:flex;align-items:center;justify-content:space-between;padding:0 22px;font-size:14px;color:#202124;box-shadow:0 1px 2px rgba(60,64,67,.08);min-width:165px}
-  .pill.date{width:322px;font-size:16px}
-  .pill.tasks{width:322px;font-size:15px}
-  .pill .arrow{font-size:13px;margin-left:15px;color:#3c4043}
-  .hero{margin-top:-5px;background:#2374df;color:#fff;height:81px;border-radius:9px;display:flex;align-items:center;overflow:hidden}
-  .hero-title{font-size:38px;font-weight:700;padding:0 18px;flex:1;white-space:nowrap}
-  .hero-title span{font-weight:400}
-  .hero-box{height:100%;display:flex;align-items:center;padding:0 18px;border-left:6px solid #fff;font-size:18px;font-weight:600}
-  .hero-updated{min-width:270px;height:100%;display:flex;flex-direction:column;justify-content:center;padding:0 20px;border-left:6px solid #fff}
-  .hero-updated small{font-size:11px}
-  .hero-updated strong{font-size:17px}
-  .hero-updated em{font-size:12px;font-style:normal;text-align:right;margin-top:2px}
-  .filters{margin-top:15px;display:grid;grid-template-columns:repeat(6,minmax(145px,1fr));gap:10px}
-  .filter{height:40px;border:1px solid #bfc5cc;border-radius:22px;background:#fff;padding:0 16px 0 26px;display:flex;align-items:center;justify-content:space-between;font-size:13px;min-width:0}
-  .filter .value{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;margin-right:10px}
-  .filter .down{font-size:11px;color:#3c4043}
-  .filter.wide{grid-column:span 2}
-  .filter.queue{grid-column:span 2}
-  .notice-line{height:3px;background:#1a73e8;margin-top:10px}
-  .note{margin:42px 5px 20px;background:#ffd2c5;border:1px solid #ff5b2a;border-radius:13px;padding:10px 13px;color:#f04a1c;font-size:16px;max-width:1010px;line-height:1.3}
-  .note b{text-decoration:underline}
-  .card{border:1px solid #edf0f2;border-radius:13px;box-shadow:0 1px 3px rgba(60,64,67,.10);padding:10px 16px 0;overflow:hidden}
-  .card-title{font-size:19px;font-weight:700;margin:2px 0 27px 36px}
-  .card-title span{font-weight:400;color:#777}
-  .table-wrap{overflow:auto;border-top:0}
-  table{border-collapse:separate;border-spacing:0;width:100%;min-width:1150px;font-size:13px}
-  th{font-weight:400;text-align:left;height:38px;color:#4f555b;white-space:nowrap;padding:0 8px}
-  th:first-child{padding-left:36px}
-  td{height:40px;padding:0 8px;border-top:1px solid #f1f3f4;white-space:nowrap;color:#4f555b}
-  td:first-child{padding-left:36px}
-  tr:nth-child(even) td{background:#fbfbfb}
-  .url{color:#5f6368;text-decoration:underline;max-width:230px;overflow:hidden;text-overflow:ellipsis;display:inline-block;vertical-align:middle}
-  .dash{color:#666}
-  .status{color:#3c4043}
-  .footer-space{height:20px}
-  .menu{position:fixed;z-index:20;background:#fff;border:1px solid #dadce0;border-radius:10px;box-shadow:0 4px 14px rgba(0,0,0,.16);padding:6px 0;display:none;min-width:190px}
-  .menu.open{display:block}
-  .menu-item{padding:9px 14px;font-size:13px;cursor:pointer}
-  .menu-item:hover{background:#f1f3f4}
-  @media(max-width:1200px){
-    .sidebar{width:220px}.hero-title{font-size:30px}.filters{grid-template-columns:repeat(4,minmax(140px,1fr))}
-    .filter.wide,.filter.queue{grid-column:span 2}
-  }
-  @media(max-width:800px){
-    body{overflow:auto}.topbar{height:64px}.sidebar{display:none}.workspace{padding:18px 10px}
-    .hero{height:auto;min-height:100px;flex-wrap:wrap}.hero-title{font-size:26px;padding:15px}.hero-box{height:48px}.hero-updated{height:48px}
-    .filters{grid-template-columns:repeat(2,minmax(140px,1fr))}.filter.wide,.filter.queue{grid-column:span 2}
-    .top-actions .action{display:none}.brand{font-size:17px}
-  }
+*{box-sizing:border-box}body{margin:0;font-family:Arial,Roboto,sans-serif;color:#333;background:#fff}
+.top{height:62px;background:#f7f9fc;border-bottom:1px solid #e4e7eb;display:flex;align-items:center;padding:0 18px;font-size:24px;color:#173f73}
+.top .logo{font-size:31px;margin-right:18px;color:#7b95b4}.top .actions{margin-left:auto;display:flex;gap:10px}
+.btn{border:1px solid #d7dce2;background:#fff;border-radius:24px;padding:10px 18px;color:#185abc;cursor:pointer}.btn.blue{background:#b9ddff}
+.layout{display:flex;min-height:calc(100vh - 62px)}.side{width:344px;border-right:1px solid #ddd;background:#fff;padding-top:38px}
+.section{padding:0 22px 8px;color:#174b95;font-size:20px;font-weight:700}.nav{padding:0 0 8px}.nav div{padding:17px 47px;font-size:18px;color:#5c6570}.nav .active{background:#e7f0ff;border-radius:0 36px 36px 0;color:#1453a1;font-weight:700}
+.main{flex:1;overflow:hidden;padding:42px 16px 40px}.controls{display:flex;gap:16px;align-items:center;flex-wrap:wrap}
+.select{min-width:300px;height:52px;border:1px solid #d6dbe2;border-radius:28px;background:#fff;padding:0 20px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;font-size:18px}.select.small{min-width:235px}
+.menu{position:absolute;z-index:20;background:#fff;border:1px solid #ddd;border-radius:4px;box-shadow:0 6px 18px #0002;min-width:245px;display:none;overflow:hidden}.menu.open{display:block}.menu div{padding:12px 16px;cursor:pointer}.menu div:hover{background:#eef4fb}
+.hero{margin-top:12px;background:#2875dc;color:#fff;height:102px;display:flex;align-items:center;padding:0 18px}.hero h1{font-size:45px;margin:0;font-weight:500}.hero h1 strong{font-weight:800}.feedback{margin-left:auto;border-left:6px solid #fff;height:100%;padding:30px 28px;font-size:22px;font-weight:700}.updated{border-left:6px solid #fff;height:100%;padding:17px 28px;font-size:15px}.updated b{font-size:20px}
+.filters{display:flex;gap:12px;flex-wrap:wrap;padding:18px 0 12px;border-bottom:4px solid #2875dc}.filter{height:52px;border:1px solid #cfd5dc;border-radius:28px;padding:0 18px;min-width:220px;background:#fff;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:space-between}.filter.wide{min-width:390px}.filter .v{max-width:175px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.note{margin:54px 8px 24px;border:1px solid #ff5c38;background:#ffd2c7;border-radius:18px;padding:16px;color:#f14e2b;font-size:18px;line-height:1.35}.note b{text-decoration:underline}
+.card{border:1px solid #e4e6e9;border-radius:15px;box-shadow:0 1px 4px #00000012;overflow:hidden}.card-title{padding:18px 66px;font-size:24px}.card-title strong{color:#1e2f42}.card-title span{color:#666}
+.table-wrap{overflow:auto;max-height:65vh}.status{padding:9px 14px;font-size:13px;color:#666;border-top:1px solid #eee}
+table{border-collapse:collapse;width:100%;min-width:1450px;font-size:15px}th,td{padding:13px 12px;border-bottom:1px solid #eee;text-align:left;white-space:nowrap}th{font-weight:500;color:#435b76;position:sticky;top:0;background:#fff;z-index:2}td a{color:#4776a9;text-decoration:underline;display:block;max-width:250px;overflow:hidden;text-overflow:ellipsis}.empty{text-align:center;padding:50px;color:#777}
+@media(max-width:900px){.side{width:220px}.hero h1{font-size:30px}.feedback,.updated{display:none}.main{padding:20px 10px}}
 </style>
 </head>
 <body>
-<div class="app">
-  <header class="topbar">
-    <div class="brand-icon"><span></span></div>
-    <div class="brand">Dash Board Cruse</div>
-    <div class="top-actions">
-      <button class="action" onclick="resetFilters()">↶ &nbsp;Reset</button>
-      <button class="action share">♙ &nbsp;Share <span>▼</span></button>
-      <button class="circle">⋮</button>
-      <div class="avatar">●</div>
-    </div>
-  </header>
-
-  <div class="main">
-    <aside class="sidebar">
-      <div class="section-title"><span class="chev">▾</span> Production</div>
-      <nav class="nav">
-        <div class="nav-item">Active Time On Tool</div>
-        <div class="nav-item">Time Per Label</div>
-        <div class="nav-item">Campaign Throughput</div>
-        <div class="nav-item">Labeler Performance</div>
-        <div class="nav-item active">Daily Task Tracking</div>
-      </nav>
-      <div class="group"><span class="chev">▸</span> Efficiency</div>
-    </aside>
-
-    <main class="content">
-      <div class="workspace">
-        <div class="control-row">
-          <button class="pill date" data-filter="date" onclick="openMenu(this)">Sep 28, 2026 - Sep 28, 2026 <span class="arrow">▼</span></button>
-          <button class="pill tasks" data-filter="segment" onclick="openMenu(this)">Tasks Or Segments: segments <span class="arrow">▼</span></button>
-
-          <div class="hero">
-            <div class="hero-title">Labeling Production: <span>Daily Task Tracking</span></div>
-            <div class="hero-box">Feedback</div>
-            <div class="hero-updated">
-              <small>Last Updated:</small>
-              <strong>Sep 28, 2026, 12:00 AM</strong>
-              <em>me936584@meti.ai</em>
-            </div>
-          </div>
-        </div>
-
-        <div class="filters">
-          <button class="filter" data-key="created" onclick="openMenu(this)"><span class="value">Created Date</span><span class="down">▼</span></button>
-          <button class="filter" data-key="updated" onclick="openMenu(this)"><span class="value">Updated_at Date</span><span class="down">▼</span></button>
-          <button class="filter" data-key="submitted" onclick="openMenu(this)"><span class="value">Submitted Date</span><span class="down">▼</span></button>
-          <button class="filter" data-key="processed" onclick="openMenu(this)"><span class="value">Processed Date</span><span class="down">▼</span></button>
-          <button class="filter" data-key="cancelled" onclick="openMenu(this)"><span class="value">Tree Is Cancelled</span><span class="down">▼</span></button>
-          <button class="filter" data-key="tag" onclick="openMenu(this)"><span class="value">Tag</span><span class="down">▼</span></button>
-
-          <button class="filter" data-key="status" onclick="openMenu(this)"><span class="value">Task Status: processed (1)</span><span class="down">▼</span></button>
-          <button class="filter" data-key="type" onclick="openMenu(this)"><span class="value">Task Type</span><span class="down">▼</span></button>
-          <button class="filter" data-key="user" onclick="openMenu(this)"><span class="value">Latest User</span><span class="down">▼</span></button>
-          <button class="filter queue" data-key="queue" onclick="openMenu(this)"><span class="value">MSL Queue</span><span class="down">▼</span></button>
-        </div>
-
-        <div class="notice-line"></div>
-
-        <div class="note">
-          <b>NOTE:</b> Use the <b>Tasks Or Segments</b> filter to show the count of distinct segments -or- count of distinct tasks. Please use the <b>TASK count</b> for <b>Image Segmentation</b> due to these segments being split into multiple tasks.
-        </div>
-
-        <section class="card">
-          <div class="card-title">Task Tracking by Status <span>(Counting Segments)</span></div>
-          <div class="table-wrap">
-            <table>
-              <thead>
-                <tr>
-                  <th>⊟&nbsp; task_status</th>
-                  <th>⊟&nbsp; URL</th>
-                  <th>Latest User</th>
-                  <th>MslBenchmarkLab...</th>
-                  <th>SellClumping</th>
-                  <th>SellIvandar2D</th>
-                  <th>SellIvandarQA</th>
-                  <th>SellMapping</th>
-                  <th>SellMappingQA</th>
-                  <th>SellRelabeling</th>
-                </tr>
-              </thead>
-              <tbody id="rows">
-                <tr><td class="status">processed</td><td><span class="url">https://labeling.robot.car/#/task/...</span></td><td>me131049@meti.ai</td><td class="dash">-</td><td class="dash">-</td><td class="dash">-</td><td class="dash">-</td><td class="dash">-</td><td class="dash">-</td><td class="dash">-</td></tr>
-                <tr><td class="status">processed</td><td><span class="url">https://labeling.robot.car/#/task/...</span></td><td>me450596@meti.ai</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td></tr>
-                <tr><td class="status">processed</td><td><span class="url">https://labeling.robot.car/#/task/...</span></td><td>me450596@meti.ai</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td></tr>
-                <tr><td class="status">processed</td><td><span class="url">https://labeling.robot.car/#/task/...</span></td><td>me450596@meti.ai</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td></tr>
-                <tr><td class="status">processed</td><td><span class="url">https://labeling.robot.car/#/task/...</span></td><td>me450596@meti.ai</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td></tr>
-                <tr><td class="status">processed</td><td><span class="url">https://labeling.robot.car/#/task/...</span></td><td>me320817@meti.ai</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td></tr>
-                <tr><td class="status">processed</td><td><span class="url">https://labeling.robot.car/#/task/...</span></td><td>me213848@meti.ai</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td></tr>
-                <tr><td class="status">processed</td><td><span class="url">https://labeling.robot.car/#/task/...</span></td><td>me127964@meti.ai</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td></tr>
-              </tbody>
-            </table>
-          </div>
-          <div class="footer-space"></div>
-        </section>
-      </div>
-    </main>
-  </div>
+<div class="top"><span class="logo">⌘</span><span>Dash Board Cruse</span><div class="actions"><button class="btn" onclick="resetAll()">↶ Reset</button><button class="btn blue">♙ Share ▼</button></div></div>
+<div class="layout">
+<aside class="side"><div class="section">⌄ Production</div><div class="nav">
+<div>Active Time On Tool</div><div>Time Per Label</div><div>Campaign Throughput</div><div>Labeler Performance</div><div class="active">Daily Task Tracking</div></div><div class="section" style="margin-top:10px;color:#555;font-size:17px">› Efficiency</div></aside>
+<main class="main">
+<div class="controls">
+<div class="select" id="dateBtn" onclick="openMenu('date',this)">Sep 28, 2026 - Sep 28, 2026 <span>▼</span></div>
+<div class="select" id="countBtn" onclick="openMenu('count',this)">Tasks Or Segments: segments <span>▼</span></div>
 </div>
-
-<div id="menu" class="menu"></div>
-
+<div class="hero"><h1><strong>Labeling Production:</strong> Daily Task Tracking</h1><div class="feedback">Feedback</div><div class="updated">Last Updated:<br><b id="updated">—</b></div></div>
+<div class="filters">
+<div class="filter" onclick="openMenu('created',this)">Created Date <span>▼</span></div>
+<div class="filter" onclick="openMenu('updatedAt',this)">Updated_at Date <span>▼</span></div>
+<div class="filter" onclick="openMenu('submitted',this)">Submitted Date <span>▼</span></div>
+<div class="filter" onclick="openMenu('processedDate',this)">Processed Date <span>▼</span></div>
+<div class="filter" onclick="openMenu('cancelled',this)">Tree Is Cancelled <span>▼</span></div>
+<div class="filter" onclick="openMenu('tag',this)">Tag <span>▼</span></div>
+<div class="filter" onclick="openMenu('tagType',this)">Tag Type <span>▼</span></div>
+<div class="filter" onclick="openMenu('status',this)">Task Status: <span class="v" id="statusText">processed</span> <span>▼</span></div>
+<div class="filter" onclick="openMenu('type',this)">Task Type <span>▼</span></div>
+<div class="filter" onclick="openMenu('user',this)">Latest User <span>▼</span></div>
+<div class="filter wide" onclick="openMenu('queue',this)">MSL Queue <span>▼</span></div>
+</div>
+<div class="note"><b>NOTE:</b> Use the <b>Tasks Or Segments</b> filter to show the count of distinct segments -or- <b>count of distinct tasks</b>. Please use the <b>TASK count</b> for <b>Image Segmentation</b> due to these segments being split into multiple tasks.</div>
+<section class="card"><div class="card-title"><strong>Task Tracking by Status</strong> <span>(Counting Segments)</span></div>
+<div class="table-wrap"><table><thead id="head"></thead><tbody id="body"><tr><td colspan="11" class="empty">Loading…</td></tr></tbody></table></div><div class="status" id="statusLine">Connecting to Apps Script…</div></section>
+</main></div><div class="menu" id="menu"></div>
 <script>
-const options = {
-  date:["Sep 28, 2026 - Sep 28, 2026","Sep 27, 2026 - Sep 28, 2026","Last 7 days"],
-  segment:["Tasks Or Segments: segments","Tasks Or Segments: tasks"],
-  created:["Created Date","Today","Yesterday","All time"],
-  updated:["Updated_at Date","Today","Yesterday","All time"],
-  submitted:["Submitted Date","Today","Yesterday","All time"],
-  processed:["Processed Date","Today","Yesterday","All time"],
-  cancelled:["Tree Is Cancelled","All","true","false"],
-  tag:["Tag","QUEUE","METRIC"],
-  status:["Task Status: processed (1)","Task Status: created","Task Status: skipped","All statuses"],
-  type:["Task Type","SellClumping","SellIvandar2D","SellIvandarQA","SellMapping","SellRelabeling"],
-  user:["Latest User","me131049@meti.ai","me450596@meti.ai","me320817@meti.ai","me213848@meti.ai","me127964@meti.ai"],
-  queue:["MSL Queue","All queues","MSL Queue"]
-};
-
-let activeButton=null;
-function openMenu(btn){
-  activeButton=btn;
-  const menu=document.getElementById('menu');
-  const key=btn.dataset.filter || btn.dataset.key;
-  const list=options[key] || ["All","Default"];
-  menu.innerHTML=list.map(v=>`<div class="menu-item" onclick="selectOption(${JSON.stringify(v)})">${v}</div>`).join("");
-  const r=btn.getBoundingClientRect();
-  menu.style.left=Math.min(r.left,window.innerWidth-220)+"px";
-  menu.style.top=(r.bottom+6)+"px";
-  menu.classList.add("open");
-}
-function selectOption(value){
-  if(!activeButton)return;
-  const valueEl=activeButton.querySelector(".value");
-  if(valueEl) valueEl.textContent=value;
-  else activeButton.innerHTML=escapeHtml(value)+" <span class='arrow'>▼</span>";
-  document.getElementById('menu').classList.remove('open');
-}
-function escapeHtml(s){return s.replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]));}
-function resetFilters(){
-  document.querySelectorAll('.filter').forEach(el=>{
-    const value=el.querySelector('.value');
-    if(!value)return;
-    const defaults={
-      created:"Created Date",updated:"Updated_at Date",submitted:"Submitted Date",
-      processed:"Processed Date",cancelled:"Tree Is Cancelled",tag:"Tag",
-      status:"Task Status: processed (1)",type:"Task Type",user:"Latest User",queue:"MSL Queue"
-    };
-    value.textContent=defaults[el.dataset.key] || value.textContent;
-  });
-  document.querySelector('[data-filter="date"]').innerHTML='Sep 28, 2026 - Sep 28, 2026 <span class="arrow">▼</span>';
-  document.querySelector('[data-filter="segment"]').innerHTML='Tasks Or Segments: segments <span class="arrow">▼</span>';
-}
-document.addEventListener('click',e=>{
-  if(!e.target.closest('.menu') && !e.target.closest('.filter') && !e.target.closest('.pill'))
-    document.getElementById('menu').classList.remove('open');
-});
+const API_URL = "https://script.google.com/macros/s/AKfycbwoahelJRew_IlutcUkl5sWY3dXjuUwUGUL-tP0aCPmC11_czvUuQ-J10dTjGQmBucM/exec";
+const TYPES=["MslBenchmarkLabeling","SellClumping","SellIvandar2D","SellIvandarQA","SellMapping","SellMappingQA","SellRelabeling","SellRelabelingQA"];
+let state={from:"2026-09-28",to:"2026-09-28",count:"segments",status:["processed"],type:[],user:[],queue:[]};
+function esc(s){return String(s??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]))}
+function openMenu(kind,el){let m=document.getElementById("menu"), vals=[];
+if(kind==="date")vals=["Today","Sep 27, 2026 - Sep 28, 2026","Last 7 days"];
+else if(kind==="count")vals=["Tasks Or Segments: segments","Tasks Or Segments: tasks"];
+else if(kind==="status")vals=["All statuses","processed","created","skipped","started"];
+else if(kind==="type")vals=["All task types",...TYPES];
+else if(kind==="user")vals=["All users"];
+else if(kind==="queue")vals=["All queues"];
+else vals=["All"];
+m.innerHTML=vals.map(v=>`<div onclick="choose(${JSON.stringify(kind)},${JSON.stringify(v)})">${esc(v)}</div>`).join("");
+let r=el.getBoundingClientRect();m.style.left=Math.min(r.left,innerWidth-260)+"px";m.style.top=r.bottom+5+"px";m.classList.add("open")}
+function choose(kind,v){document.getElementById("menu").classList.remove("open");
+if(kind==="count"){state.count=v.endsWith("tasks")?"tasks":"segments";document.getElementById("countBtn").firstChild.textContent="Tasks Or Segments: "+state.count+" "}
+if(kind==="date"){if(v==="Today"){let d=new Date();let x=d.toISOString().slice(0,10);state.from=state.to=x}else if(v.includes("27")){state.from="2026-09-27";state.to="2026-09-28"}else{let d=new Date(),to=d.toISOString().slice(0,10),f=new Date(d);f.setDate(d.getDate()-6);state.from=f.toISOString().slice(0,10);state.to=to}document.getElementById("dateBtn").firstChild.textContent=fmt(state.from)+" - "+fmt(state.to)+" "}
+if(kind==="status"){state.status=v==="All statuses"?[]:[v];document.getElementById("statusText").textContent=v==="All statuses"?"All":v}
+if(kind==="type"){state.type=v==="All task types"?[]:[v]} load()}
+function fmt(x){return new Date(x+"T12:00:00").toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric"})}
+function jsonp(params){return new Promise((resolve,reject)=>{if(!API_URL||API_URL.includes("PASTE_"))return reject(new Error("Set API_URL first"));let cb="cb_"+Date.now()+"_"+Math.random().toString(36).slice(2),s=document.createElement("script");window[cb]=d=>{delete window[cb];s.remove();resolve(d)};s.onerror=()=>{delete window[cb];s.remove();reject(new Error("Apps Script request failed"))};params.callback=cb;s.src=API_URL+"?"+new URLSearchParams(params);document.body.appendChild(s)})}
+async function load(){document.getElementById("statusLine").textContent="Loading…";try{let p={action:"cruise",from:state.from,to:state.to,count:state.count,status:state.status.join(","),type:state.type.join(","),user:state.user.join(","),queue:state.queue.join(",")};let d=await jsonp(p);if(!d.ok)throw Error(d.error||"API error");render(d);document.getElementById("statusLine").textContent=`Live source • ${d.rows.length.toLocaleString()} rows • ${new Date().toLocaleTimeString()}`}catch(e){document.getElementById("statusLine").textContent=e.message;document.getElementById("body").innerHTML=`<tr><td colspan="11" class="empty">${esc(e.message)}</td></tr>`}}
+function render(d){document.getElementById("updated").textContent=d.updated||"—";let h=["task_status","URL","Latest User",...TYPES];document.getElementById("head").innerHTML="<tr>"+h.map(x=>`<th>${esc(x)}</th>`).join("")+"</tr>";let rows=d.rows||[];document.getElementById("body").innerHTML=rows.length?rows.map(r=>"<tr>"+h.map((k,i)=>{let v=r[k]??"-";return i===1&&v!=="-"?`<td><a href="${esc(v)}" target="_blank">${esc(v)}</a></td>`:`<td>${esc(v)}</td>`}).join("")+"</tr>").join(""):`<tr><td colspan="11" class="empty">No data</td></tr>`}
+function resetAll(){state={from:new Date().toISOString().slice(0,10),to:new Date().toISOString().slice(0,10),count:"segments",status:["processed"],type:[],user:[],queue:[]};document.getElementById("statusText").textContent="processed";load()}
+document.addEventListener("click",e=>{if(!e.target.closest(".select,.filter,.menu"))document.getElementById("menu").classList.remove("open")});
+load();
 </script>
-</body>
-</html>
+</body></html>
