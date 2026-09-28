@@ -3,80 +3,293 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Dash Board Cruse</title>
+<title>Labeling Production: Daily Task Tracking</title>
 <style>
-*{box-sizing:border-box}body{margin:0;font-family:Arial,Roboto,sans-serif;color:#333;background:#fff}
-.top{height:62px;background:#f7f9fc;border-bottom:1px solid #e4e7eb;display:flex;align-items:center;padding:0 18px;font-size:24px;color:#173f73}
-.top .logo{font-size:31px;margin-right:18px;color:#7b95b4}.top .actions{margin-left:auto;display:flex;gap:10px}
-.btn{border:1px solid #d7dce2;background:#fff;border-radius:24px;padding:10px 18px;color:#185abc;cursor:pointer}.btn.blue{background:#b9ddff}
-.layout{display:flex;min-height:calc(100vh - 62px)}.side{width:344px;border-right:1px solid #ddd;background:#fff;padding-top:38px}
-.section{padding:0 22px 8px;color:#174b95;font-size:20px;font-weight:700}.nav{padding:0 0 8px}.nav div{padding:17px 47px;font-size:18px;color:#5c6570}.nav .active{background:#e7f0ff;border-radius:0 36px 36px 0;color:#1453a1;font-weight:700}
-.main{flex:1;overflow:hidden;padding:42px 16px 40px}.controls{display:flex;gap:16px;align-items:center;flex-wrap:wrap}
-.select{min-width:300px;height:52px;border:1px solid #d6dbe2;border-radius:28px;background:#fff;padding:0 20px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;font-size:18px}.select.small{min-width:235px}
-.menu{position:absolute;z-index:20;background:#fff;border:1px solid #ddd;border-radius:4px;box-shadow:0 6px 18px #0002;min-width:245px;display:none;overflow:hidden}.menu.open{display:block}.menu div{padding:12px 16px;cursor:pointer}.menu div:hover{background:#eef4fb}
-.hero{margin-top:12px;background:#2875dc;color:#fff;height:102px;display:flex;align-items:center;padding:0 18px}.hero h1{font-size:45px;margin:0;font-weight:500}.hero h1 strong{font-weight:800}.feedback{margin-left:auto;border-left:6px solid #fff;height:100%;padding:30px 28px;font-size:22px;font-weight:700}.updated{border-left:6px solid #fff;height:100%;padding:17px 28px;font-size:15px}.updated b{font-size:20px}
-.filters{display:flex;gap:12px;flex-wrap:wrap;padding:18px 0 12px;border-bottom:4px solid #2875dc}.filter{height:52px;border:1px solid #cfd5dc;border-radius:28px;padding:0 18px;min-width:220px;background:#fff;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:space-between}.filter.wide{min-width:390px}.filter .v{max-width:175px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.note{margin:54px 8px 24px;border:1px solid #ff5c38;background:#ffd2c7;border-radius:18px;padding:16px;color:#f14e2b;font-size:18px;line-height:1.35}.note b{text-decoration:underline}
-.card{border:1px solid #e4e6e9;border-radius:15px;box-shadow:0 1px 4px #00000012;overflow:hidden}.card-title{padding:18px 66px;font-size:24px}.card-title strong{color:#1e2f42}.card-title span{color:#666}
-.table-wrap{overflow:auto;max-height:65vh}.status{padding:9px 14px;font-size:13px;color:#666;border-top:1px solid #eee}
-table{border-collapse:collapse;width:100%;min-width:1450px;font-size:15px}th,td{padding:13px 12px;border-bottom:1px solid #eee;text-align:left;white-space:nowrap}th{font-weight:500;color:#435b76;position:sticky;top:0;background:#fff;z-index:2}td a{color:#4776a9;text-decoration:underline;display:block;max-width:250px;overflow:hidden;text-overflow:ellipsis}.empty{text-align:center;padding:50px;color:#777}
-@media(max-width:900px){.side{width:220px}.hero h1{font-size:30px}.feedback,.updated{display:none}.main{padding:20px 10px}}
+*{box-sizing:border-box}
+body{margin:0;font-family:Roboto,Arial,sans-serif;color:#333;background:#fff}
+.top{height:56px;background:#f7f9fc;border-bottom:1px solid #e4e7eb;display:flex;align-items:center;padding:0 18px;font-size:20px;color:#173f73;gap:12px}
+.top .grow{flex:1}
+.btn{border:1px solid #d7dce2;background:#fff;border-radius:20px;padding:8px 16px;color:#185abc;cursor:pointer;font-size:14px}
+.btn:hover{background:#eef4fb}.btn.primary{background:#1a73e8;color:#fff;border-color:#1a73e8}
+.layout{display:flex;min-height:calc(100vh - 56px)}
+.side{width:280px;flex:none;border-right:1px solid #ddd;padding-top:24px}
+.sec{padding:8px 22px;color:#174b95;font-size:16px;font-weight:700;cursor:pointer;user-select:none}
+.nav div{padding:13px 44px;font-size:15px;color:#5c6570}
+.nav .active{background:#e7f0ff;border-radius:0 30px 30px 0;color:#1453a1;font-weight:700}
+.main{flex:1;min-width:0;padding:22px 16px 40px}
+.controls{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+.pill{min-height:44px;border:1px solid #cfd5dc;border-radius:24px;padding:0 16px;background:#fff;font-size:14px;cursor:pointer;display:flex;align-items:center;gap:8px;white-space:nowrap}
+.pill:hover{background:#f5f8fc}.pill.on{border-color:#1a73e8;background:#e8f0fe;color:#174ea6}
+.pill .v{max-width:170px;overflow:hidden;text-overflow:ellipsis}
+.hero{margin-top:14px;background:#2875dc;color:#fff;min-height:84px;display:flex;align-items:center;padding:0 18px;flex-wrap:wrap}
+.hero h1{font-size:34px;margin:0;font-weight:400}.hero h1 strong{font-weight:800}
+.upd{margin-left:auto;border-left:4px solid #fff;padding:8px 20px;font-size:13px}.upd b{font-size:16px;display:block}
+.filters{display:flex;gap:10px;flex-wrap:wrap;padding:16px 0 12px;border-bottom:4px solid #2875dc}
+.note{margin:26px 4px 18px;border:1px solid #ff5c38;background:#ffd2c7;border-radius:16px;padding:14px 16px;color:#f14e2b;font-size:16px;line-height:1.35}
+.note b{text-decoration:underline}
+.chips{display:flex;gap:10px;flex-wrap:wrap;margin:0 4px 14px}
+.chip{background:#f1f5fb;border:1px solid #dbe4f1;border-radius:14px;padding:6px 12px;font-size:13px;color:#33475f}.chip b{color:#174ea6}
+.card{border:1px solid #e4e6e9;border-radius:14px;box-shadow:0 1px 4px #00000012;overflow:hidden}
+.card-title{padding:14px 24px;font-size:20px}.card-title span{color:#666}
+.table-wrap{overflow:auto;max-height:64vh}
+table{border-collapse:collapse;width:100%;min-width:1300px;font-size:14px}
+th,td{padding:11px 12px;border-bottom:1px solid #eee;text-align:left;white-space:nowrap}
+th{font-weight:500;color:#435b76;position:sticky;top:0;background:#fff;z-index:2}
+td.n{text-align:right;font-variant-numeric:tabular-nums}th.n{text-align:right}
+td a{color:#4776a9;text-decoration:underline;display:block;max-width:300px;overflow:hidden;text-overflow:ellipsis}
+.empty{text-align:center;padding:40px;color:#777}
+.statusline{padding:8px 14px;font-size:12px;color:#666;border-top:1px solid #eee}
+.err{margin:14px 4px;border:1px solid #d93025;background:#fce8e6;color:#8c1d18;border-radius:12px;padding:14px 16px;font-size:14px;display:none}
+.err pre{white-space:pre-wrap;word-break:break-word;background:#fff;border:1px solid #f0c4c0;border-radius:8px;padding:8px;margin:8px 0 0;font-size:12px;max-height:200px;overflow:auto}
+.warn{margin:0 4px 12px;background:#fff8e1;border:1px solid #f5d77a;color:#6d4c00;border-radius:10px;padding:8px 12px;font-size:13px;display:none}
+.dbg{margin:16px 4px;border:1px dashed #9aa4b2;border-radius:12px;padding:12px 14px;font-size:12px;display:none;background:#fafbfc}
+.dbg h4{margin:8px 0 4px;font-size:12px;color:#174ea6}.dbg pre{white-space:pre-wrap;word-break:break-all;margin:0;max-height:240px;overflow:auto;background:#fff;border:1px solid #e4e6e9;border-radius:8px;padding:8px}
+.pop{position:absolute;z-index:50;background:#fff;border:1px solid #ddd;border-radius:10px;box-shadow:0 8px 24px #0003;min-width:270px;max-width:340px;padding:10px;display:none}
+.pop.open{display:block}
+.pop input[type=text],.pop input[type=date]{width:100%;padding:8px;border:1px solid #cfd5dc;border-radius:8px;font-size:14px;margin-bottom:8px}
+.pop .list{max-height:260px;overflow:auto;margin-bottom:8px}
+.pop label{display:flex;gap:8px;align-items:center;padding:6px 4px;font-size:14px;cursor:pointer;word-break:break-all}
+.pop .row{display:flex;gap:8px;justify-content:flex-end}
+.pop .presets{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px}
+.pop .presets button{border:1px solid #cfd5dc;background:#fff;border-radius:14px;padding:4px 10px;font-size:12px;cursor:pointer}
+@media(max-width:900px){.side{display:none}.hero h1{font-size:24px}}
 </style>
 </head>
 <body>
-<div class="top"><span class="logo">⌘</span><span>Dash Board Cruse</span><div class="actions"><button class="btn" onclick="resetAll()">↶ Reset</button><button class="btn blue">♙ Share ▼</button></div></div>
+<div class="top"><span>Dash Board Cruise</span><span class="grow"></span>
+  <button class="btn" onclick="resetAll()">↶ Reset</button>
+  <button class="btn" onclick="load()">⟳ Refresh</button>
+  <button class="btn" onclick="toggleDebug()">Debug</button></div>
 <div class="layout">
-<aside class="side"><div class="section">⌄ Production</div><div class="nav">
-<div>Active Time On Tool</div><div>Time Per Label</div><div>Campaign Throughput</div><div>Labeler Performance</div><div class="active">Daily Task Tracking</div></div><div class="section" style="margin-top:10px;color:#555;font-size:17px">› Efficiency</div></aside>
+<aside class="side">
+  <div class="sec" onclick="toggleNav('prod')">⌄ Production</div>
+  <div class="nav" id="nav-prod"><div>Active Time On Tool</div><div>Time Per Label</div><div>Campaign Throughput</div><div>Labeler Performance</div><div class="active">Daily Task Tracking</div></div>
+  <div class="sec" style="color:#555" onclick="toggleNav('eff')" id="effHead">› Efficiency</div>
+  <div class="nav" id="nav-eff" style="display:none"><div>Efficiency</div></div>
+</aside>
 <main class="main">
-<div class="controls">
-<div class="select" id="dateBtn" onclick="openMenu('date',this)">Sep 28, 2026 - Sep 28, 2026 <span>▼</span></div>
-<div class="select" id="countBtn" onclick="openMenu('count',this)">Tasks Or Segments: segments <span>▼</span></div>
-</div>
-<div class="hero"><h1><strong>Labeling Production:</strong> Daily Task Tracking</h1><div class="feedback">Feedback</div><div class="updated">Last Updated:<br><b id="updated">—</b></div></div>
-<div class="filters">
-<div class="filter" onclick="openMenu('created',this)">Created Date <span>▼</span></div>
-<div class="filter" onclick="openMenu('updatedAt',this)">Updated_at Date <span>▼</span></div>
-<div class="filter" onclick="openMenu('submitted',this)">Submitted Date <span>▼</span></div>
-<div class="filter" onclick="openMenu('processedDate',this)">Processed Date <span>▼</span></div>
-<div class="filter" onclick="openMenu('cancelled',this)">Tree Is Cancelled <span>▼</span></div>
-<div class="filter" onclick="openMenu('tag',this)">Tag <span>▼</span></div>
-<div class="filter" onclick="openMenu('tagType',this)">Tag Type <span>▼</span></div>
-<div class="filter" onclick="openMenu('status',this)">Task Status: <span class="v" id="statusText">processed</span> <span>▼</span></div>
-<div class="filter" onclick="openMenu('type',this)">Task Type <span>▼</span></div>
-<div class="filter" onclick="openMenu('user',this)">Latest User <span>▼</span></div>
-<div class="filter wide" onclick="openMenu('queue',this)">MSL Queue <span>▼</span></div>
-</div>
-<div class="note"><b>NOTE:</b> Use the <b>Tasks Or Segments</b> filter to show the count of distinct segments -or- <b>count of distinct tasks</b>. Please use the <b>TASK count</b> for <b>Image Segmentation</b> due to these segments being split into multiple tasks.</div>
-<section class="card"><div class="card-title"><strong>Task Tracking by Status</strong> <span>(Counting Segments)</span></div>
-<div class="table-wrap"><table><thead id="head"></thead><tbody id="body"><tr><td colspan="11" class="empty">Loading…</td></tr></tbody></table></div><div class="status" id="statusLine">Connecting to Apps Script…</div></section>
-</main></div><div class="menu" id="menu"></div>
+  <div class="controls">
+    <div class="pill" id="p-date" onclick="openDate('main',this)"></div>
+    <div class="pill" id="p-count" onclick="openCount(this)"></div>
+  </div>
+  <div class="hero"><h1><strong>Labeling Production:</strong> Daily Task Tracking</h1>
+    <div class="upd">Last Updated:<b id="updated">—</b></div></div>
+  <div class="filters" id="filters"></div>
+  <div class="note"><b>NOTE:</b> Use the <b>Tasks Or Segments</b> filter to show the count of distinct segments -or- <b>count of distinct tasks</b>. Please use the <b>TASK count</b> for <b>Image Segmentation</b> due to these segments being split into multiple tasks.</div>
+  <div class="err" id="err"></div>
+  <div class="warn" id="warn"></div>
+  <div class="chips" id="chips"></div>
+  <section class="card">
+    <div class="card-title"><strong>Task Tracking by Status</strong> <span id="modeTxt">(Counting Segments)</span></div>
+    <div class="table-wrap"><table><thead id="head"></thead><tbody id="body"><tr><td class="empty">Loading…</td></tr></tbody></table></div>
+    <div class="statusline" id="statusLine">Connecting…</div>
+  </section>
+  <div class="dbg" id="dbg"></div>
+</main></div>
+<div class="pop" id="pop"></div>
+
 <script>
-const API_URL = "https://script.google.com/macros/s/AKfycbwoahelJRew_IlutcUkl5sWY3dXjuUwUGUL-tP0aCPmC11_czvUuQ-J10dTjGQmBucM/exec";
-const TYPES=["MslBenchmarkLabeling","SellClumping","SellIvandar2D","SellIvandarQA","SellMapping","SellMappingQA","SellRelabeling","SellRelabelingQA"];
-let state={from:"2026-09-28",to:"2026-09-28",count:"segments",status:["processed"],type:[],user:[],queue:[]};
-function esc(s){return String(s??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]))}
-function openMenu(kind,el){let m=document.getElementById("menu"), vals=[];
-if(kind==="date")vals=["Today","Sep 27, 2026 - Sep 28, 2026","Last 7 days"];
-else if(kind==="count")vals=["Tasks Or Segments: segments","Tasks Or Segments: tasks"];
-else if(kind==="status")vals=["All statuses","processed","created","skipped","started"];
-else if(kind==="type")vals=["All task types",...TYPES];
-else if(kind==="user")vals=["All users"];
-else if(kind==="queue")vals=["All queues"];
-else vals=["All"];
-m.innerHTML=vals.map(v=>`<div onclick="choose(${JSON.stringify(kind)},${JSON.stringify(v)})">${esc(v)}</div>`).join("");
-let r=el.getBoundingClientRect();m.style.left=Math.min(r.left,innerWidth-260)+"px";m.style.top=r.bottom+5+"px";m.classList.add("open")}
-function choose(kind,v){document.getElementById("menu").classList.remove("open");
-if(kind==="count"){state.count=v.endsWith("tasks")?"tasks":"segments";document.getElementById("countBtn").firstChild.textContent="Tasks Or Segments: "+state.count+" "}
-if(kind==="date"){if(v==="Today"){let d=new Date();let x=d.toISOString().slice(0,10);state.from=state.to=x}else if(v.includes("27")){state.from="2026-09-27";state.to="2026-09-28"}else{let d=new Date(),to=d.toISOString().slice(0,10),f=new Date(d);f.setDate(d.getDate()-6);state.from=f.toISOString().slice(0,10);state.to=to}document.getElementById("dateBtn").firstChild.textContent=fmt(state.from)+" - "+fmt(state.to)+" "}
-if(kind==="status"){state.status=v==="All statuses"?[]:[v];document.getElementById("statusText").textContent=v==="All statuses"?"All":v}
-if(kind==="type"){state.type=v==="All task types"?[]:[v]} load()}
-function fmt(x){return new Date(x+"T12:00:00").toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric"})}
-function jsonp(params){return new Promise((resolve,reject)=>{if(!API_URL||API_URL.includes("PASTE_"))return reject(new Error("Set API_URL first"));let cb="cb_"+Date.now()+"_"+Math.random().toString(36).slice(2),s=document.createElement("script");window[cb]=d=>{delete window[cb];s.remove();resolve(d)};s.onerror=()=>{delete window[cb];s.remove();reject(new Error("Apps Script request failed"))};params.callback=cb;s.src=API_URL+"?"+new URLSearchParams(params);document.body.appendChild(s)})}
-async function load(){document.getElementById("statusLine").textContent="Loading…";try{let p={action:"cruise",from:state.from,to:state.to,count:state.count,status:state.status.join(","),type:state.type.join(","),user:state.user.join(","),queue:state.queue.join(",")};let d=await jsonp(p);if(!d.ok)throw Error(d.error||"API error");render(d);document.getElementById("statusLine").textContent=`Live source • ${d.rows.length.toLocaleString()} rows • ${new Date().toLocaleTimeString()}`}catch(e){document.getElementById("statusLine").textContent=e.message;document.getElementById("body").innerHTML=`<tr><td colspan="11" class="empty">${esc(e.message)}</td></tr>`}}
-function render(d){document.getElementById("updated").textContent=d.updated||"—";let h=["task_status","URL","Latest User",...TYPES];document.getElementById("head").innerHTML="<tr>"+h.map(x=>`<th>${esc(x)}</th>`).join("")+"</tr>";let rows=d.rows||[];document.getElementById("body").innerHTML=rows.length?rows.map(r=>"<tr>"+h.map((k,i)=>{let v=r[k]??"-";return i===1&&v!=="-"?`<td><a href="${esc(v)}" target="_blank">${esc(v)}</a></td>`:`<td>${esc(v)}</td>`}).join("")+"</tr>").join(""):`<tr><td colspan="11" class="empty">No data</td></tr>`}
-function resetAll(){state={from:new Date().toISOString().slice(0,10),to:new Date().toISOString().slice(0,10),count:"segments",status:["processed"],type:[],user:[],queue:[]};document.getElementById("statusText").textContent="processed";load()}
-document.addEventListener("click",e=>{if(!e.target.closest(".select,.filter,.menu"))document.getElementById("menu").classList.remove("open")});
-load();
+/* ======== الإعدادات: ضع رابط الـ Web App هنا ======== */
+const API_URL = "https://script.google.com/macros/s/AKfycbzrkjDx5uwCTihxwUa7TX3zMffqXH1zvqxzuZTW1UyLf-VSk0tT88N69OflWpMVKaup/exec";
+const ACCESS_KEY = "";           // نفس قيمة CFG.ACCESS_KEY في Code.gs (لو مستخدمها)
+const TZ = "Africa/Cairo";
+const TIMEOUT_MS = 60000;
+/* ==================================================== */
+
+const MULTI = [
+  {k:"status",  label:"Task Status"},
+  {k:"type",    label:"Task Type"},
+  {k:"user",    label:"Latest User"},
+  {k:"queue",   label:"MSL Queue"},
+  {k:"tag",     label:"Tag"},
+  {k:"tagType", label:"Tag Type"},
+  {k:"cancelled",label:"Tree Is Cancelled"}
+];
+const DATES = [
+  {k:"created",  label:"Created Date"},
+  {k:"updated",  label:"Updated_at Date"},
+  {k:"submitted",label:"Submitted Date"},
+  {k:"processed",label:"Processed Date"}
+];
+const todayStr = () => new Date().toLocaleDateString("en-CA",{timeZone:TZ});
+const addDays = (s,n)=>{const d=new Date(s+"T12:00:00Z");d.setUTCDate(d.getUTCDate()+n);return d.toISOString().slice(0,10)};
+const fmt = s => s ? new Date(s+"T12:00:00Z").toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric",timeZone:"UTC"}) : "…";
+const esc = s => String(s==null?"":s).replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]));
+
+let META = null, S = fresh(), LAST = {};
+function fresh(){
+  const t = todayStr(), s = {count:"segments", dateField:"updated_at", from:t, to:t, multi:{}, dates:{}};
+  MULTI.forEach(m=>s.multi[m.k]=[]);
+  DATES.forEach(d=>s.dates[d.k]=["",""]);
+  return s;
+}
+
+/* ---------------- API (JSONP) ---------------- */
+function apiUrl(params){
+  const p = new URLSearchParams(params);
+  return API_URL + "?" + p.toString();
+}
+function jsonp(params){
+  return new Promise((resolve,reject)=>{
+    if(!API_URL || API_URL.includes("PASTE_")) return reject(new Error("API_URL غير مضبوط في index.html"));
+    const cb = "cb_"+Date.now()+"_"+Math.random().toString(36).slice(2);
+    const s = document.createElement("script");
+    const full = {...params, callback:cb}; if(ACCESS_KEY) full.key = ACCESS_KEY;
+    const url = apiUrl(full), t0 = performance.now();
+    const done = () => {clearTimeout(timer); delete window[cb]; s.remove()};
+    const timer = setTimeout(()=>{done(); reject(Object.assign(new Error("Timeout بعد "+TIMEOUT_MS/1000+" ثانية"),{url,params}))},TIMEOUT_MS);
+    window[cb] = d => {done(); resolve({data:d,url,ms:Math.round(performance.now()-t0),params})};
+    s.onerror = () => {done(); reject(Object.assign(new Error("فشل تحميل الـ API (JSONP). غالبًا: الرابط غلط، الـ Web App مش منشور بـ 'Anyone'، أو الـ deployment اتحذف. افتح الرابط في تاب لوحده وشوف."),{url,params}))};
+    s.src = url; document.body.appendChild(s);
+  });
+}
+
+function buildParams(){
+  const p = {action:"cruise", count:S.count, dateField:S.dateField, from:S.from, to:S.to};
+  MULTI.forEach(m=>{ if(S.multi[m.k].length) p[m.k] = S.multi[m.k].join("|"); });
+  DATES.forEach(d=>{ const [a,b]=S.dates[d.k]; if(a) p[d.k+"From"]=a; if(b) p[d.k+"To"]=b; });
+  return p;
+}
+
+/* ---------------- Load ---------------- */
+async function loadMeta(){
+  try{
+    const r = await jsonp({action:"meta"}); LAST.meta = r;
+    if(!r.data.ok) throw Object.assign(new Error(r.data.error||"meta failed"),{resp:r.data,url:r.url,params:r.params});
+    META = r.data;
+    // الافتراضي زي الأصل: Tag Type = QUEUE لو موجود في الداتا
+    if(META.values.tagType && META.values.tagType.includes("QUEUE")) S.multi.tagType = ["QUEUE"];
+    if(META.values.status && !S.multi.status.length) {/* All */}
+  }catch(e){ showErr(e); META = {values:{},dateRange:{},availableFields:[]}; }
+}
+
+async function load(){
+  hideErr(); setStatus("Loading…");
+  try{
+    const r = await jsonp(buildParams()); LAST.cruise = r;
+    const d = r.data;
+    if(!d.ok) throw Object.assign(new Error(d.error||"API error"),{resp:d,url:r.url,params:r.params});
+    render(d); setStatus(`Live • ${d.totalRows.toLocaleString()} rows • matched sheet rows ${d.matchedSheetRows.toLocaleString()} • ${r.ms}ms • ${new Date().toLocaleTimeString()}`);
+    refreshDebug();
+  }catch(e){
+    LAST.error = e; showErr(e); setStatus("Error");
+    document.getElementById("body").innerHTML = `<tr><td class="empty">لا توجد بيانات — راجع رسالة الخطأ بالأعلى</td></tr>`;
+    document.getElementById("chips").innerHTML=""; refreshDebug();
+  }
+}
+
+/* ---------------- Render ---------------- */
+function render(d){
+  document.getElementById("updated").textContent = d.updated || "—";
+  document.getElementById("modeTxt").textContent = `(Counting ${S.count==="tasks"?"Tasks":"Segments"})`;
+  const w = document.getElementById("warn");
+  w.style.display = (d.warnings&&d.warnings.length)?"block":"none"; w.innerHTML = (d.warnings||[]).map(esc).join("<br>");
+  const st = d.summary.byStatus||{};
+  document.getElementById("chips").innerHTML =
+    `<div class="chip">Distinct ${esc(d.summary.mode)}: <b>${d.summary.distinctTotal.toLocaleString()}</b></div>` +
+    Object.keys(st).map(k=>`<div class="chip">${esc(k)}: <b>${st[k].toLocaleString()}</b></div>`).join("");
+  const cols = d.columns;
+  document.getElementById("head").innerHTML = "<tr>"+cols.map((c,i)=>`<th class="${i>2?"n":""}">${esc(c)}</th>`).join("")+"</tr>";
+  document.getElementById("body").innerHTML = d.rows.length ? d.rows.map(r=>"<tr>"+cols.map((c,i)=>{
+    const v = r[c];
+    if(c==="URL") return /^https?:\/\//i.test(v||"") ? `<td><a href="${esc(v)}" target="_blank" rel="noopener">${esc(v)}</a></td>` : `<td>${esc(v)}</td>`;
+    if(i>2) return `<td class="n">${v==null?"-":Number(v).toLocaleString()}</td>`;
+    return `<td>${esc(v===""||v==null?"-":v)}</td>`;
+  }).join("")+"</tr>").join("") : `<tr><td class="empty">No data for the selected filters</td></tr>`;
+}
+function setStatus(t){document.getElementById("statusLine").textContent=t}
+
+/* ---------------- Errors & Debug ---------------- */
+function showErr(e){
+  const box = document.getElementById("err"); const r = e.resp||{};
+  let html = `<b>خطأ:</b> ${esc(e.message||e)}`;
+  if(r.hint) html += `<br><b>Hint:</b> ${esc(r.hint)}`;
+  if(e.url) html += `<pre>${esc("GET "+maskKey(e.url))}</pre>`;
+  if(e.resp) html += `<pre>${esc(JSON.stringify(e.resp,null,2).slice(0,3000))}</pre>`;
+  box.innerHTML = html; box.style.display = "block";
+}
+function hideErr(){document.getElementById("err").style.display="none"}
+const maskKey = u => u.replace(/([?&]key=)[^&]*/,"$1***");
+function toggleDebug(){const b=document.getElementById("dbg");b.style.display=b.style.display==="block"?"none":"block";refreshDebug()}
+function refreshDebug(){
+  const b=document.getElementById("dbg"); if(b.style.display!=="block") return;
+  const r = LAST.cruise, e = LAST.error, m = LAST.meta;
+  const j = o => esc(JSON.stringify(o,null,2)).slice(0,20000);
+  b.innerHTML =
+    `<h4>API base</h4><pre>${esc(API_URL)}</pre>`+
+    `<h4>Request URL (last)</h4><pre>${esc(maskKey((r&&r.url)||(e&&e.url)||"—"))}</pre>`+
+    `<h4>Request params</h4><pre>${j((r&&r.params)||(e&&e.params)||buildParams())}</pre>`+
+    `<h4>Status</h4><pre>${e?("FAILED: "+esc(e.message)):(r?`API ok:${r.data.ok} • ${r.ms}ms • (JSONP لا يكشف HTTP status؛ الفشل بيظهر كـ script error)`:"—")}</pre>`+
+    `<h4>Parsed row count</h4><pre>${r&&r.data.ok?`rows: ${r.data.rows.length} • totalRows: ${r.data.totalRows} • matchedSheetRows: ${r.data.matchedSheetRows} • truncated: ${r.data.truncated}`:"—"}</pre>`+
+    `<h4>API response (last, truncated 20k)</h4><pre>${j((r&&r.data)||(e&&e.resp)||null)}</pre>`+
+    `<h4>Meta</h4><pre>${m?j({rowCount:m.data.rowCount,availableFields:m.data.availableFields,dateRange:m.data.dateRange}):"—"}</pre>`+
+    `<div style="margin-top:8px"><button class="btn" onclick="runDiagnose()">Run diagnose</button></div><pre id="diag"></pre>`;
+}
+async function runDiagnose(){
+  const el=document.getElementById("diag"); el.textContent="…";
+  try{const r=await jsonp({action:"diagnose"}); el.textContent=JSON.stringify(r.data,null,2)}catch(e){el.textContent=e.message}
+}
+
+/* ---------------- Controls ---------------- */
+function drawPills(){
+  document.getElementById("p-date").innerHTML = `<span>${fmt(S.from)} - ${fmt(S.to)}</span><span>▼</span>`;
+  document.getElementById("p-count").innerHTML = `<span>Tasks Or Segments: <b>${S.count}</b></span><span>▼</span>`;
+  const f = document.getElementById("filters");
+  f.innerHTML = DATES.map(d=>{const [a,b]=S.dates[d.k];const on=a||b;
+      return `<div class="pill ${on?"on":""}" onclick="openDate('${d.k}',this)"><span>${d.label}</span>${on?`<span class="v">${fmt(a)} – ${fmt(b)}</span>`:""}<span>▼</span></div>`}).join("")
+    + MULTI.map(m=>{const v=S.multi[m.k];
+      return `<div class="pill ${v.length?"on":""}" onclick="openMulti('${m.k}',this)"><span>${m.label}</span>${v.length?`<span class="v">${esc(v.length===1?v[0]:v.length+" selected")}</span>`:""}<span>▼</span></div>`}).join("");
+}
+const pop = () => document.getElementById("pop");
+function place(el){const r=el.getBoundingClientRect(),p=pop();p.classList.add("open");
+  p.style.left=Math.max(8,Math.min(r.left+scrollX,scrollX+innerWidth-350))+"px";p.style.top=(r.bottom+scrollY+6)+"px"}
+function closePop(){pop().classList.remove("open")}
+
+function openMulti(k,el){
+  const label = MULTI.find(m=>m.k===k).label, opts = (META&&META.values[k])||[];
+  if(!opts.length){ pop().innerHTML=`<div style="padding:6px;font-size:13px">لا توجد قيم متاحة لـ ${esc(label)} (العمود غير موجود في الشيت أو فاضي).</div>`; place(el); return; }
+  const sel = new Set(S.multi[k]);
+  pop().innerHTML = `<input type="text" placeholder="Search ${esc(label)}…" oninput="filterList(this.value)"><div class="list" id="plist">`
+    + opts.map(o=>`<label data-v="${esc(o.toLowerCase())}"><input type="checkbox" value="${esc(o)}" ${sel.has(o)?"checked":""}>${esc(o)}</label>`).join("")
+    + `</div><div class="row"><button class="btn" onclick="clearMulti('${k}')">Clear</button><button class="btn primary" onclick="applyMulti('${k}')">Apply</button></div>`;
+  place(el);
+}
+function filterList(q){q=q.toLowerCase();document.querySelectorAll("#plist label").forEach(l=>l.style.display=l.dataset.v.includes(q)?"":"none")}
+function applyMulti(k){S.multi[k]=[...document.querySelectorAll("#plist input:checked")].map(i=>i.value);closePop();drawPills();load()}
+function clearMulti(k){S.multi[k]=[];closePop();drawPills();load()}
+
+function openDate(k,el){
+  const main = k==="main", a = main?S.from:S.dates[k][0], b = main?S.to:S.dates[k][1];
+  const t = todayStr();
+  const presets = main ? `<div class="presets">
+      <button onclick="preset('${t}','${t}')">Today</button>
+      <button onclick="preset('${addDays(t,-1)}','${addDays(t,-1)}')">Yesterday</button>
+      <button onclick="preset('${addDays(t,-6)}','${t}')">Last 7 days</button>
+      <button onclick="preset('${addDays(t,-29)}','${t}')">Last 30 days</button>
+      <button onclick="preset('${t.slice(0,8)}01','${t}')">This month</button></div>
+    <label style="font-size:12px">Filter by field</label>
+    <select id="dfield" style="width:100%;margin:4px 0 8px;padding:6px">${["updated_at","created_at","submitted_at","processed_at"].map(f=>`<option ${S.dateField===f?"selected":""}>${f}</option>`).join("")}</select>` : "";
+  pop().innerHTML = presets + `<label style="font-size:12px">Start Date</label><input type="date" id="d1" value="${a||""}"><label style="font-size:12px">End Date</label><input type="date" id="d2" value="${b||""}">
+    <div class="row"><button class="btn" onclick="closePop()">Cancel</button>${main?"":`<button class="btn" onclick="applyDate('${k}',true)">Clear</button>`}<button class="btn primary" onclick="applyDate('${k}')">Apply</button></div>`;
+  place(el);
+}
+function preset(a,b){document.getElementById("d1").value=a;document.getElementById("d2").value=b}
+function applyDate(k,clear){
+  const a = clear?"":document.getElementById("d1").value, b = clear?"":document.getElementById("d2").value;
+  if(k==="main"){ if(!a||!b) return alert("اختار تاريخ بداية ونهاية"); S.from=a;S.to=b;S.dateField=document.getElementById("dfield").value; }
+  else S.dates[k]=[a,b];
+  closePop();drawPills();load();
+}
+function openCount(el){
+  pop().innerHTML = ["segments","tasks"].map(v=>`<label><input type="radio" name="cm" ${S.count===v?"checked":""} onchange="S.count='${v}';closePop();drawPills();load()"> ${v==="tasks"?"Tasks":"Segments"}</label>`).join("");
+  place(el);
+}
+function toggleNav(w){const e=document.getElementById("nav-"+w);e.style.display=e.style.display==="none"?"":"none";
+  if(w==="eff")document.getElementById("effHead").textContent=(e.style.display==="none"?"› ":"⌄ ")+"Efficiency"}
+function resetAll(){S=fresh();if(META&&META.values.tagType&&META.values.tagType.includes("QUEUE"))S.multi.tagType=["QUEUE"];drawPills();load()}
+document.addEventListener("click",e=>{if(!e.target.closest(".pill,.pop"))closePop()});
+
+(async function init(){drawPills();await loadMeta();drawPills();load()})();
 </script>
-</body></html>
+</body>
+</html>
